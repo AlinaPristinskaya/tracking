@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="base">
     <Notification />
-    <Choice />
+    <router-link to="/"><Choice /></router-link>
   </div>
 </template>
 <script>

@@ -1,42 +1,27 @@
 <template>
   <div>
     <div class="header">
-      <Logo />
-      <div class="content">
-        <form>
-          <div v-for="item in checkedNames" :key="item" class="div">
-            <label class="label"
-              ><input
-                v-model="checedInput"
-                name="choice"
-                type="radio"
-                class="radio"
-                v-bind:value="checkedNames.indexOf(item) + 1"
-              /><span class="icon"></span>
-              {{ item }}
-            </label>
-          </div>
-          <button type="submit" class="btn" @click.prevent="cliked">
-            Відправити
-          </button>
-        </form>
-      </div>
+      <ErrorPage v-if="error" />
+      <Form v-if="params" />
     </div>
   </div>
 </template>
 <script>
-import Logo from "../components/Logo.vue";
+import ErrorPage from "../components/ErrorPage.vue";
+import Form from "../components/Form.vue";
 import a from "../services/trackingApi";
+
 export default {
   name: "Choice",
-  components: { Logo },
+  components: { ErrorPage, Form },
   data() {
     return {
-      params: {},
-      checedInput: "",
-      checkedNames: ["Підтвердити", "Зателефонуйте мені"],
+      params: "",
+      error: "",
+      cheked: "",
     };
   },
+
   methods: {
     getQuerys() {
       //получаю обьект параметров и записываю их в стейт,
@@ -54,11 +39,18 @@ export default {
     },
     async getInfo() {
       // делаю гет запрос по ссылке
-      console.log(location.search);
-      try {
-        await a.fetchTrackingInfo(location.search);
-      } catch (error) {
-        console.log(error);
+      const params = location.search;
+      console.log(params);
+      if (params !== "") {
+        this.getQuerys();
+        try {
+          await a.fetchTrackingInfo(location.search);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        this.error = "Нет параметров";
+        this.params = "";
       }
     },
     async postInfo(choice) {
@@ -75,11 +67,17 @@ export default {
       this.postInfo(choiceValue);
     },
   },
-  mounted() {
+  created() {
     // при маунте записываю параметры в стейт и делаю гет запрос
     this.getQuerys();
+    console.log(this.getInfo());
     this.getInfo();
   },
+  /*  chekedForm({ choice }) {
+    this.cheked = choice;
+  }, */
+  // что такое func = checkUID
+  //при гет запросе без параметров ответ 200
 };
 </script>
 <style lang="scss" scoped>
@@ -134,3 +132,4 @@ export default {
   font-size: 24px;
 }
 </style>
+// что такое func = checkUID

@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Choice from "../views/Choice.vue";
+//import ErrorPage from "../components/ErrorPage";
+//import Form from "../components/Form";
 
 Vue.use(VueRouter);
 
